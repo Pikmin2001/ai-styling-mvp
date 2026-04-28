@@ -138,7 +138,8 @@ class NewPassword(SQLModel):
     new_password: str = Field(min_length=8, max_length=128)
 
 
-class   ClothItem(SQLModel, table=True):
+#class   ClothItem(SQLModel, table=True):
+class ClothItem(SQLModel):
     #id: UUID = Field(default_factory=uuid4, primary_key=True)
     id: int
 

@@ -2,8 +2,10 @@ from fastapi import APIRouter
 from typing import Optional
 from app.services.outfit_service import generate_outfit
 from app.data.fake_inventory import fake_items
+from uuid import uuid4
 
 router = APIRouter(prefix="/outfits", tags=["outfits"])
+saved_outfits = {}
 
 @router.post("/generate")
 def generate(
@@ -81,3 +83,28 @@ def swap_item(
     current_outfit["total_price"] = total_price
 
     return current_outfit
+
+@router.post("/save")
+def save_outfit(current_outfit: dict):
+    outfit_id = str(uuid4())
+
+    saved_outfits[outfit_id] = current_outfit
+
+    return {
+        "outfit_id": outfit_id,
+        "share_url": f"/outfits/{outfit_id}",
+        "outfit": current_outfit
+    }
+
+
+@router.get("/{outfit_id}")
+def get_outfit(outfit_id: str):
+    outfit = saved_outfits.get(outfit_id)
+
+    if not outfit:
+        return {"error": "Outfit not found"}
+
+    return {
+        "outfit_id": outfit_id,
+        "outfit": outfit
+    }
