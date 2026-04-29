@@ -11,6 +11,7 @@ function Home() {
   const [outfit, setOutfit] = useState<any>(null)
   const [gender, setGender] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
+  const [shareUrl, setShareUrl] = useState("")
 
   async function generateOutfit() {
     const params = new URLSearchParams()
@@ -25,6 +26,36 @@ function Home() {
     const data = await res.json()
     setOutfit(data)
   }
+
+  async function swapItem(itemType: string) {
+  if (!outfit) return
+
+  const res = await fetch(
+    `${API_URL}/api/v1/outfits/swap?item_type=${itemType}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(outfit),
+    }
+  )
+
+  const data = await res.json()
+  setOutfit(data)
+}
+
+async function saveOutfit() {
+  if (!outfit) return
+
+  const res = await fetch(`${API_URL}/api/v1/outfits/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(outfit),
+  })
+
+  const data = await res.json()
+  setShareUrl(data.share_url)
+}
+
 
   return (
     <div style={{ padding: 40 }}>
@@ -53,7 +84,27 @@ function Home() {
         Generate Outfit
       </button>
 
-      {outfit && <pre>{JSON.stringify(outfit, null, 2)}</pre>}
+      {outfit && (
+  <div style={{ marginTop: 20 }}>
+    <pre>{JSON.stringify(outfit, null, 2)}</pre>
+
+    <div style={{ marginTop: 10 }}>
+      <button onClick={() => swapItem("top")}>Swap Top</button>
+      <button onClick={() => swapItem("bottom")}>Swap Bottom</button>
+      <button onClick={() => swapItem("shoes")}>Swap Shoes</button>
+    </div>
+
+    <div style={{ marginTop: 10 }}>
+      <button onClick={saveOutfit}>Save Outfit</button>
+    </div>
+  </div>
+)}
     </div>
   )
+
+  
+
 }
+
+
+
