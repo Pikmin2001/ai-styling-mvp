@@ -9,6 +9,8 @@ from typing import Optional
 from uuid import UUID, uuid4
 from pydantic import BaseModel
 
+#from pydantic import BaseModel, Field
+
 def get_datetime_utc() -> datetime:
     return datetime.now(timezone.utc)
 
@@ -139,18 +141,13 @@ class NewPassword(SQLModel):
 
 
 #class   ClothItem(SQLModel, table=True):
-class ClothItem(SQLModel):
-    #id: UUID = Field(default_factory=uuid4, primary_key=True)
+class ClothItem(BaseModel):
     id: int
-
     name: str
-    category: str  # "top", "bottom", "shoes"
+    category: str
     gender: str
-
     price: float
-    image_url: Optional[str] = None
-
-    # important for your logic
-    #style_tags: str  # e.g. "casual,streetwear"
-
-    in_stock: bool = True
+    in_stock: bool
+    style_tags: list[str] = []
+    color: str | None = None
+    formality: str | None = None

@@ -11,8 +11,9 @@ saved_outfits = {}
 def generate(
     gender: Optional[str] = None,
     max_price: Optional[float] = None,
+    style: Optional[str] = None,
 ):
-    outfit = generate_outfit(fake_items, gender, max_price)
+    outfit = generate_outfit(fake_items, gender, max_price, style)
 
     if not outfit:
         return {"error": "Not enough items to build outfit"}
