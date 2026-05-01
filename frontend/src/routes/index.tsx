@@ -12,13 +12,21 @@ function Home() {
   const [gender, setGender] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
   const [shareUrl, setShareUrl] = useState("")
+  const [styles, setStyles] = useState<string[]>([])
+
+function toggleStyle(e: React.ChangeEvent<HTMLInputElement>) {
+  const val = e.target.value
+  setStyles((prev) =>
+    prev.includes(val) ? prev.filter((s) => s !== val) : [...prev, val],
+  )
+}
 
   async function generateOutfit() {
     const params = new URLSearchParams()
 
     if (gender) params.append("gender", gender)
     if (maxPrice) params.append("max_price", maxPrice)
-
+    if (styles.length) params.append("styles", styles.join(","))
    const res = await fetch(`${API_URL}/api/v1/outfits/generate?${params.toString()}`, {
   method: "POST",
 })
@@ -30,17 +38,25 @@ function Home() {
   async function swapItem(itemType: string) {
   if (!outfit) return
 
+  console.log("Swapping:", itemType)
+  console.log("Current outfit:", outfit)
+
   const res = await fetch(
     `${API_URL}/api/v1/outfits/swap?item_type=${itemType}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(outfit),
-    }
+    },
   )
 
+  console.log("Swap status:", res.status)
+
   const data = await res.json()
+  console.log("Swap response:", data)
+
   setOutfit(data)
+  setShareUrl("")
 }
 
 async function saveOutfit() {
@@ -58,6 +74,7 @@ async function saveOutfit() {
 
 
   return (
+    
     <div style={{ padding: 40 }}>
       <h1>AI Styling MVP</h1>
 
@@ -80,6 +97,26 @@ async function saveOutfit() {
         />
       </div>
 
+      <div style={{ marginTop: 12 }}>
+  <p>Style Preferences:</p>
+
+  <label>
+    <input type="checkbox" value="casual" onChange={toggleStyle} /> Casual
+  </label>
+
+  <label>
+    <input type="checkbox" value="streetwear" onChange={toggleStyle} /> Streetwear
+  </label>
+
+  <label>
+    <input type="checkbox" value="minimalist" onChange={toggleStyle} /> Minimalist
+  </label>
+
+  <label>
+    <input type="checkbox" value="formal" onChange={toggleStyle} /> Formal
+  </label>
+</div>
+
       <button type="button" onClick={generateOutfit} style={{ marginTop: 16 }}>
         Generate Outfit
       </button>
@@ -98,6 +135,15 @@ async function saveOutfit() {
       <button onClick={saveOutfit}>Save Outfit</button>
     </div>
   </div>
+)}
+
+  {shareUrl && (
+  <p style={{ marginTop: 20 }}>
+    Share Link:{" "}
+    <a href={shareUrl} target="_blank" rel="noreferrer">
+      {shareUrl}
+    </a>
+  </p>
 )}
     </div>
   )

@@ -1,17 +1,17 @@
 from typing import Optional
 
 
-def score_item(item, style: Optional[str]) -> int:
-    if not style:
+from typing import Optional, List
+
+def score_item(item, styles: Optional[List[str]]) -> int:
+    if not styles:
         return 0
+    # count overlaps
+    return sum(1 for s in styles if s in item.style_tags)
 
-    tags = getattr(item, "style_tags", [])
-
-    return 1 if style in tags else 0
-
-
-def pick_best_item(items, style: Optional[str]):
-    return max(items, key=lambda item: score_item(item, style))
+def pick_best_item(items, styles: Optional[List[str]]):
+    # break ties by price (cheaper wins) or randomize if you prefer
+    return max(items, key=lambda item: (score_item(item, styles), -item.price))
 
 
 def generate_outfit(

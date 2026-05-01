@@ -11,9 +11,16 @@ saved_outfits = {}
 def generate(
     gender: Optional[str] = None,
     max_price: Optional[float] = None,
-    style: Optional[str] = None,
+    styles: Optional[str] = None,
 ):
-    outfit = generate_outfit(fake_items, gender, max_price, style)
+    style_list = styles.split(",") if styles else None
+
+    outfit = generate_outfit(
+        fake_items,
+        gender,
+        max_price,
+        style_list
+    )
 
     if not outfit:
         return {"error": "Not enough items to build outfit"}
@@ -75,11 +82,11 @@ def swap_item(
     current_outfit[item_type] = best_item.model_dump()
 
     # Recalculate total price
-    total_price = sum([
-        item["price"]
-        for key, item in current_outfit.items()
-        if key != "total_price" and item
-    ])
+    total_price = sum(
+    item["price"]
+    for key, item in current_outfit.items()
+    if key in ["top", "bottom", "shoes"] and item
+)
 
     current_outfit["total_price"] = total_price
 
