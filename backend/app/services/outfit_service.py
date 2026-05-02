@@ -1,6 +1,10 @@
-from typing import Optional, List
+from typing import List, Optional
 import random
 
+from app.services.scoring_service import combo_score
+from app.services.tagging_service import enrich_tags
+
+recent_ids = set()
 
 def score_item(item, styles: Optional[List[str]]) -> int:
     if not styles:
@@ -28,8 +32,13 @@ def combo_score(top, bottom, shoes, styles):
     neutral_count = sum(1 for c in colors if c in neutrals)
     color_bonus = 1 if neutral_count >= 2 else 0
 
-    return style_overlap + requested_bonus + color_bonus
+    diversity = sum(diversity_penalty(i) for i in [top, bottom, shoes])
+    return style_overlap + requested_bonus + color_bonus + diversity
 
+recent_ids = set()  # keep this in module scope for now
+
+def diversity_penalty(item):
+    return -1 if item.id in recent_ids else 0
 
 def generate_outfit(items, gender=None, max_price=None, styles=None):
     filtered = [
@@ -38,6 +47,9 @@ def generate_outfit(items, gender=None, max_price=None, styles=None):
         and (gender is None or i.gender == gender)
         and (max_price is None or i.price <= max_price)
     ]
+
+    for item in filtered:
+        item.style_tags = enrich_tags(item)
 
     tops = [i for i in filtered if i.category == "top"]
     bottoms = [i for i in filtered if i.category == "bottom"]
@@ -58,6 +70,10 @@ def generate_outfit(items, gender=None, max_price=None, styles=None):
 
     top, bottom, shoe = best
     total = top.price + bottom.price + shoe.price
+
+    recent_ids.update([top.id, bottom.id, shoe.id])
+    if len(recent_ids) > 20:
+        recent_ids.clear()
 
     return {
         "top": top.model_dump(),
