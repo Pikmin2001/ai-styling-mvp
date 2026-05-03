@@ -15,6 +15,7 @@ function Home() {
   const [styles, setStyles] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [swapping, setSwapping] = useState<string | null>(null)
 
 function toggleStyle(e: React.ChangeEvent<HTMLInputElement>) {
   const val = e.target.value
@@ -26,6 +27,7 @@ function toggleStyle(e: React.ChangeEvent<HTMLInputElement>) {
   async function generateOutfit() {
   setLoading(true)
   setError(null)
+  setShareUrl("")
   try {
     const params = new URLSearchParams()
     if (gender) params.append("gender", gender)
@@ -44,11 +46,10 @@ function toggleStyle(e: React.ChangeEvent<HTMLInputElement>) {
   }
 }
 
-  async function swapItem(itemType: string) {
+async function swapItem(itemType: string) {
   if (!outfit) return
 
-  console.log("Swapping:", itemType)
-  console.log("Current outfit:", outfit)
+  setSwapping(itemType)
 
   const res = await fetch(
     `${API_URL}/api/v1/outfits/swap?item_type=${itemType}`,
@@ -56,16 +57,12 @@ function toggleStyle(e: React.ChangeEvent<HTMLInputElement>) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(outfit),
-    },
+    }
   )
 
-  console.log("Swap status:", res.status)
-
   const data = await res.json()
-  console.log("Swap response:", data)
-
   setOutfit(data)
-  setShareUrl("")
+  setSwapping(null)
 }
 
 async function saveOutfit() {
@@ -185,6 +182,11 @@ async function saveOutfit() {
     Pick your preferences and generate an outfit.
   </div>
 )}
+{outfit && outfit.styles && (
+  <p style={{ marginTop: 10 }}>
+    <strong>Styles:</strong> {outfit.styles.join(", ")}
+  </p>
+)}
         {outfit && (
           <div
             style={{
@@ -211,13 +213,31 @@ async function saveOutfit() {
                 <div
                   key={label}
                   style={{
-                    background: "#334155",
+                    background: "#1f2937",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                     padding: 18,
                     borderRadius: 12,
                   }}
                 >
                   <h3>{label}</h3>
-                  <p style={{ fontSize: 18, fontWeight: "bold" }}>{item.name}</p>
+
+<p style={{ color: "yellow" }}>
+  Image URL: {item.image_url ?? "missing"}
+</p>
+
+<img
+  src={item.image_url || "https://via.placeholder.com/300x200?text=No+Image"}
+  alt={item.name}
+  style={{
+    width: "100%",
+    height: 150,
+    objectFit: "cover",
+    borderRadius: 8,
+    marginBottom: 10,
+  }}
+/>
+
+<p style={{ fontSize: 18, fontWeight: "bold" }}>{item.name}</p>
                   <p>${item.price}</p>
                   <p>Color: {item.color ?? "N/A"}</p>
 
@@ -241,18 +261,11 @@ async function saveOutfit() {
                   </div>
 
                   <button
-                    type="button"
-                    onClick={() => swapItem(label.toLowerCase())}
-                    style={{
-                      marginTop: 14,
-                      padding: "8px 12px",
-                      borderRadius: 8,
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Swap {label}
-                  </button>
+  onClick={() => swapItem(label.toLowerCase())}
+  disabled={swapping === label.toLowerCase()}
+>
+  {swapping === label.toLowerCase() ? "Swapping..." : `Swap ${label}`}
+</button>
                 </div>
               ))}
             </div>

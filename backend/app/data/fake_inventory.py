@@ -3,7 +3,7 @@ from app.models import ClothItem
 fake_items = [
     ClothItem(
         id=1,
-        name="Black Oversized Tee",
+        name="Black_Oversized_Tee",
         category="top",
         gender="male",
         price=25,
@@ -11,6 +11,7 @@ fake_items = [
         style_tags=["streetwear", "casual"],
         color="black",
         formality="casual",
+        image_url="/images/Black_Oversized_Tee.jpg",
     ),
     ClothItem(
         id=2,
@@ -22,6 +23,7 @@ fake_items = [
         style_tags=["casual", "minimalist"],
         color="blue",
         formality="casual",
+        image_url="/images/Blue_Straight_Jeans.jpg",
     ),
     ClothItem(
         id=3,
@@ -33,6 +35,7 @@ fake_items = [
         style_tags=["streetwear", "casual"],
         color="white",
         formality="casual",
+        image_url="/images/White_Sneakers.jpg",
     ),
     ClothItem(
         id=4,
@@ -44,6 +47,7 @@ fake_items = [
         style_tags=["formal", "minimalist"],
         color="white",
         formality="smart casual",
+        image_url="/images/Oxford_Button_Down.jpg",
     ),
     ClothItem(
         id=5,
@@ -55,6 +59,7 @@ fake_items = [
         style_tags=["formal", "minimalist"],
         color="khaki",
         formality="smart casual",
+        image_url="/images/Slim_Chino_Pants.jpg",
     ),
     ClothItem(
         id=6,
@@ -66,6 +71,7 @@ fake_items = [
         style_tags=["formal", "minimalist"],
         color="brown",
         formality="smart casual",
+        image_url="/images/Brown_Loafers.jpg",
     ),
     ClothItem(
         id=7,
@@ -77,6 +83,7 @@ fake_items = [
         style_tags=["casual", "minimalist"],
         color="cream",
         formality="casual",
+        image_url="/images/Cropped_Knit_Top.jpg",
     ),
     ClothItem(
         id=8,
@@ -88,6 +95,7 @@ fake_items = [
         style_tags=["minimalist", "formal"],
         color="black",
         formality="smart casual",
+        image_url="/images/Black_Midi_Skirt.png",
     ),
     ClothItem(
         id=9,
@@ -99,5 +107,6 @@ fake_items = [
         style_tags=["streetwear", "casual"],
         color="white",
         formality="casual",
+        image_url="/images/White_Platform_Sneakers.jpg",
     ),
 ]

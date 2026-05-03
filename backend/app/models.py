@@ -151,3 +151,4 @@ class ClothItem(BaseModel):
     style_tags: list[str] = []
     color: str | None = None
     formality: str | None = None
+    image_url: str | None = None
