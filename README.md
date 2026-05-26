@@ -40,9 +40,10 @@ Built with a React + FastAPI architecture and designed as the foundation for a f
 
 ---
 
-## Screenshots
+## 
 
-(Add screenshots here later)
+<img width="795" height="945" alt="image" src="https://github.com/user-attachments/assets/98b7939c-c0cc-4449-9be1-8667bcea7b33" />
+
 
 ---
 
@@ -178,24 +179,24 @@ The backend:
 
 ---
 
-## Why I Built This
+## Foci
 
-I wanted to explore:
+I wanted to tinker with:
 
+*FastAPI
 * recommendation systems
 * full-stack application architecture
 * AI-powered personalization
 * UI/UX product design
-
-This project started as an MVP and evolved into a scalable foundation for a fashion-tech SaaS platform.
+   
 
 ---
 
 ## Author
 
-Josh W
+Josh 
 
-GitHub: (add your GitHub link)
+GitHub: https://github.com/Pikmin2001
 
 ---
 
