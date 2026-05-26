@@ -1,233 +1,204 @@
-# Full Stack FastAPI Template
+# AI Styling MVP
 
-<a href="https://github.com/fastapi/full-stack-fastapi-template/actions?query=workflow%3A%22Test+Docker+Compose%22" target="_blank"><img src="https://github.com/fastapi/full-stack-fastapi-template/workflows/Test%20Docker%20Compose/badge.svg" alt="Test Docker Compose"></a>
-<a href="https://github.com/fastapi/full-stack-fastapi-template/actions?query=workflow%3A%22Test+Backend%22" target="_blank"><img src="https://github.com/fastapi/full-stack-fastapi-template/workflows/Test%20Backend/badge.svg" alt="Test Backend"></a>
-<a href="https://coverage-badge.samuelcolvin.workers.dev/redirect/fastapi/full-stack-fastapi-template" target="_blank"><img src="https://coverage-badge.samuelcolvin.workers.dev/fastapi/full-stack-fastapi-template.svg" alt="Coverage"></a>
+A full-stack fashion recommendation web app that generates personalized outfits based on user preferences like gender, budget, and style tags.
 
-## Technology Stack and Features
+Built with a React + FastAPI architecture and designed as the foundation for a future AI-powered fashion SaaS platform.
 
-- ⚡ [**FastAPI**](https://fastapi.tiangolo.com) for the Python backend API.
-  - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
-  - 🔍 [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
-  - 💾 [PostgreSQL](https://www.postgresql.org) as the SQL database.
-- 🚀 [React](https://react.dev) for the frontend.
-  - 💃 Using TypeScript, hooks, [Vite](https://vitejs.dev), and other parts of a modern frontend stack.
-  - 🎨 [Tailwind CSS](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com) for the frontend components.
-  - 🤖 An automatically generated frontend client.
-  - 🧪 [Playwright](https://playwright.dev) for End-to-End testing.
-  - 🦇 Dark mode support.
-- 🐋 [Docker Compose](https://www.docker.com) for development and production.
-- 🔒 Secure password hashing by default.
-- 🔑 JWT (JSON Web Token) authentication.
-- 📫 Email based password recovery.
-- 📬 [Mailcatcher](https://mailcatcher.me) for local email testing during development.
-- ✅ Tests with [Pytest](https://pytest.org).
-- 📞 [Traefik](https://traefik.io) as a reverse proxy / load balancer.
-- 🚢 Deployment instructions using Docker Compose, including how to set up a frontend Traefik proxy to handle automatic HTTPS certificates.
-- 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
+---
 
-### Dashboard Login
+## Features
 
-[![API docs](img/login.png)](https://github.com/fastapi/full-stack-fastapi-template)
+* Outfit generation based on:
 
-### Dashboard - Admin
+  * gender
+  * budget
+  * style preferences
+* Dynamic outfit swapping
+* Image-based outfit cards
+* Save/share outfit functionality
+* Smart style matching logic
+* Responsive modern UI
+* Full-stack architecture
 
-[![API docs](img/dashboard.png)](https://github.com/fastapi/full-stack-fastapi-template)
+---
 
-### Dashboard - Items
+## Tech Stack
 
-[![API docs](img/dashboard-items.png)](https://github.com/fastapi/full-stack-fastapi-template)
+### Frontend
 
-### Dashboard - Dark Mode
+* React
+* TypeScript
+* Vite
+* TanStack Router
 
-[![API docs](img/dashboard-dark.png)](https://github.com/fastapi/full-stack-fastapi-template)
+### Backend
 
-### Interactive API Documentation
+* FastAPI
+* Python
+* Pydantic
+* SQLModel
 
-[![API docs](img/docs.png)](https://github.com/fastapi/full-stack-fastapi-template)
+---
 
-## How To Use It
+## Screenshots
 
-You can **just fork or clone** this repository and use it as is.
+(Add screenshots here later)
 
-✨ It just works. ✨
+---
 
-### How to Use a Private Repository
-
-If you want to have a private repository, GitHub won't allow you to simply fork it as it doesn't allow changing the visibility of forks.
-
-But you can do the following:
-
-- Create a new GitHub repo, for example `my-full-stack`.
-- Clone this repository manually, set the name with the name of the project you want to use, for example `my-full-stack`:
+## Project Structure
 
 ```bash
-git clone git@github.com:fastapi/full-stack-fastapi-template.git my-full-stack
+ai-styling-mvp/
+│
+├── frontend/       # React frontend
+├── backend/        # FastAPI backend
+└── README.md
 ```
 
-- Enter into the new directory:
+---
+
+## Local Setup
+
+### 1. Clone the repository
 
 ```bash
-cd my-full-stack
+git clone <your-repo-url>
+cd ai-styling-mvp
 ```
 
-- Set the new origin to your new repository, copy it from the GitHub interface, for example:
+---
+
+## Backend Setup
+
+### 1. Navigate to backend
 
 ```bash
-git remote set-url origin git@github.com:octocat/my-full-stack.git
+cd backend
 ```
 
-- Add this repo as another "remote" to allow you to get updates later:
+### 2. Install dependencies
+
+Using Poetry:
 
 ```bash
-git remote add upstream git@github.com:fastapi/full-stack-fastapi-template.git
+poetry install
 ```
 
-- Push the code to your new repository:
+### 3. Run backend server
 
 ```bash
-git push -u origin master
+poetry run uvicorn app.main:app --reload
 ```
 
-### Update From the Original Template
+Backend runs on:
 
-After cloning the repository, and after doing changes, you might want to get the latest changes from this original template.
+```txt
+http://localhost:8000
+```
 
-- Make sure you added the original repository as a remote, you can check it with:
+Swagger docs:
+
+```txt
+http://localhost:8000/docs
+```
+
+---
+
+## Frontend Setup
+
+### 1. Navigate to frontend
 
 ```bash
-git remote -v
-
-origin    git@github.com:octocat/my-full-stack.git (fetch)
-origin    git@github.com:octocat/my-full-stack.git (push)
-upstream    git@github.com:fastapi/full-stack-fastapi-template.git (fetch)
-upstream    git@github.com:fastapi/full-stack-fastapi-template.git (push)
+cd frontend
 ```
 
-- Pull the latest changes without merging:
+### 2. Install dependencies
 
 ```bash
-git pull --no-commit upstream master
+npm install
 ```
 
-This will download the latest changes from this template without committing them, that way you can check everything is right before committing.
-
-- If there are conflicts, solve them in your editor.
-
-- Once you are done, commit the changes:
+### 3. Run frontend
 
 ```bash
-git merge --continue
+npm run dev
 ```
 
-### Configure
+Frontend runs on:
 
-You can then update configs in the `.env` files to customize your configurations.
-
-Before deploying it, make sure you change at least the values for:
-
-- `SECRET_KEY`
-- `FIRST_SUPERUSER_PASSWORD`
-- `POSTGRES_PASSWORD`
-
-You can (and should) pass these as environment variables from secrets.
-
-Read the [deployment.md](./deployment.md) docs for more details.
-
-### Generate Secret Keys
-
-Some environment variables in the `.env` file have a default value of `changethis`.
-
-You have to change them with a secret key, to generate secret keys you can run the following command:
-
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(32))"
+```txt
+http://localhost:5173
 ```
 
-Copy the content and use that as password / secret key. And run that again to generate another secure key.
+---
 
-## How To Use It - Alternative With Copier
+## Environment Variables
 
-This repository also supports generating a new project using [Copier](https://copier.readthedocs.io).
+Create a `.env` file inside `frontend/`:
 
-It will copy all the files, ask you configuration questions, and update the `.env` files with your answers.
-
-### Install Copier
-
-You can install Copier with:
-
-```bash
-pip install copier
+```env
+VITE_API_URL=http://localhost:8000
 ```
 
-Or better, if you have [`pipx`](https://pipx.pypa.io/), you can run it with:
+---
 
-```bash
-pipx install copier
-```
+## Example Features
 
-**Note**: If you have `pipx`, installing copier is optional, you could run it directly.
+### Style Quiz
 
-### Generate a Project With Copier
+Users can select:
 
-Decide a name for your new project's directory, you will use it below. For example, `my-awesome-project`.
+* Casual
+* Streetwear
+* Minimalist
+* Formal
 
-Go to the directory that will be the parent of your project, and run the command with your project's name:
+### Outfit Generation
 
-```bash
-copier copy https://github.com/fastapi/full-stack-fastapi-template my-awesome-project --trust
-```
+The backend:
 
-If you have `pipx` and you didn't install `copier`, you can run it directly:
+* filters inventory
+* scores item compatibility
+* builds cohesive outfits
+* returns a styled recommendation
 
-```bash
-pipx run copier copy https://github.com/fastapi/full-stack-fastapi-template my-awesome-project --trust
-```
+---
 
-**Note** the `--trust` option is necessary to be able to execute a [post-creation script](https://github.com/fastapi/full-stack-fastapi-template/blob/master/.copier/update_dotenv.py) that updates your `.env` files.
+## Future Improvements
 
-### Input Variables
+* AI/LLM-powered styling recommendations
+* Real retailer inventory integration
+* User authentication
+* Saved wardrobes
+* Occasion-based styling
+* Vector/image similarity search
+* Computer vision for clothing analysis
+* Personalized recommendation engine
 
-Copier will ask you for some data, you might want to have at hand before generating the project.
+---
 
-But don't worry, you can just update any of that in the `.env` files afterwards.
+## Why I Built This
 
-The input variables, with their default values (some auto generated) are:
+I wanted to explore:
 
-- `project_name`: (default: `"FastAPI Project"`) The name of the project, shown to API users (in .env).
-- `stack_name`: (default: `"fastapi-project"`) The name of the stack used for Docker Compose labels and project name (no spaces, no periods) (in .env).
-- `secret_key`: (default: `"changethis"`) The secret key for the project, used for security, stored in .env, you can generate one with the method above.
-- `first_superuser`: (default: `"admin@example.com"`) The email of the first superuser (in .env).
-- `first_superuser_password`: (default: `"changethis"`) The password of the first superuser (in .env).
-- `smtp_host`: (default: "") The SMTP server host to send emails, you can set it later in .env.
-- `smtp_user`: (default: "") The SMTP server user to send emails, you can set it later in .env.
-- `smtp_password`: (default: "") The SMTP server password to send emails, you can set it later in .env.
-- `emails_from_email`: (default: `"info@example.com"`) The email account to send emails from, you can set it later in .env.
-- `postgres_password`: (default: `"changethis"`) The password for the PostgreSQL database, stored in .env, you can generate one with the method above.
-- `sentry_dsn`: (default: "") The DSN for Sentry, if you are using it, you can set it later in .env.
+* recommendation systems
+* full-stack application architecture
+* AI-powered personalization
+* UI/UX product design
 
-## Backend Development
+This project started as an MVP and evolved into a scalable foundation for a fashion-tech SaaS platform.
 
-Backend docs: [backend/README.md](./backend/README.md).
+---
 
-## Frontend Development
+## Author
 
-Frontend docs: [frontend/README.md](./frontend/README.md).
+Josh W
 
-## Deployment
+GitHub: (add your GitHub link)
 
-Deployment docs: [deployment.md](./deployment.md).
-
-## Development
-
-General development docs: [development.md](./development.md).
-
-This includes using Docker Compose, custom local domains, `.env` configurations, etc.
-
-## Release Notes
-
-Check the file [release-notes.md](./release-notes.md).
+---
 
 ## License
 
-The Full Stack FastAPI Template is licensed under the terms of the MIT license.
+MIT License
