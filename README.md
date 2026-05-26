@@ -2,8 +2,6 @@
 
 A full-stack fashion recommendation web app that generates personalized outfits based on user preferences like gender, budget, and style tags.
 
-Built with a React + FastAPI architecture and designed as the foundation for a future AI-powered fashion SaaS platform.
-
 ---
 
 ## Features
