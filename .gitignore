@@ -5,3 +5,27 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env.*
+
+# Node
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

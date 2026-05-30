@@ -91,6 +91,19 @@ async function saveOutfit() {
     >
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <h1 style={{ fontSize: 36, marginBottom: 8 }}>AI Styling MVP</h1>
+        <span
+  style={{
+    display: "inline-block",
+    background: "#334155",
+    color: "#cbd5e1",
+    padding: "6px 12px",
+    borderRadius: 999,
+    fontSize: 13,
+    marginBottom: 16,
+  }}
+>
+  Personalized retail styling engine
+</span>
         <p style={{ color: "#cbd5e1", marginBottom: 32 }}>
           Generate a personalized outfit based on gender, budget, and style preferences.
         </p>
@@ -217,13 +230,20 @@ async function saveOutfit() {
                     boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                     padding: 18,
                     borderRadius: 12,
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)"
+                    e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.45)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)"
+                    e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.3)"
+}}
                 >
                   <h3>{label}</h3>
 
-<p style={{ color: "yellow" }}>
-  Image URL: {item.image_url ?? "missing"}
-</p>
+
 
 <img
   src={item.image_url || "https://via.placeholder.com/300x200?text=No+Image"}
@@ -260,9 +280,21 @@ async function saveOutfit() {
                     ))}
                   </div>
 
-                  <button
+                 <button
+  type="button"
   onClick={() => swapItem(label.toLowerCase())}
   disabled={swapping === label.toLowerCase()}
+  style={{
+    marginTop: 14,
+    padding: "8px 12px",
+    borderRadius: 8,
+    border: "none",
+    cursor: "pointer",
+    background: "#38bdf8",
+    color: "#0f172a",
+    fontWeight: "bold",
+    opacity: swapping === label.toLowerCase() ? 0.6 : 1,
+  }}
 >
   {swapping === label.toLowerCase() ? "Swapping..." : `Swap ${label}`}
 </button>
@@ -282,6 +314,8 @@ async function saveOutfit() {
                 border: "none",
                 cursor: "pointer",
                 fontWeight: "bold",
+                background: "#22c55e",
+                color: "black",
               }}
             >
               Save Outfit
