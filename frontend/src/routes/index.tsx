@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
+import { StyleQuiz } from "@/components/StyleQuiz"
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000"
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -17,12 +18,9 @@ function Home() {
   const [error, setError] = useState<string | null>(null)
   const [swapping, setSwapping] = useState<string | null>(null)
 
-function toggleStyle(e: React.ChangeEvent<HTMLInputElement>) {
-  const val = e.target.value
-  setStyles((prev) =>
-    prev.includes(val) ? prev.filter((s) => s !== val) : [...prev, val],
-  )
-}
+  function handleQuizComplete(result: any) {
+    setStyles(result.style_tags || [])
+  }
 
   async function generateOutfit() {
   setLoading(true)
@@ -137,32 +135,8 @@ async function saveOutfit() {
             />
           </div>
 
-          <div style={{ marginTop: 16 }}>
-            <p>Style Preferences:</p>
-
-            <div style={{ marginTop: 8 }}>
-  {styles.map((s) => (
-    <span
-      key={s}
-      style={{
-        background: "#334155",
-        padding: "4px 10px",
-        borderRadius: 999,
-        marginRight: 6,
-        fontSize: 12,
-      }}
-    >
-      {s}
-    </span>
-  ))}
-</div>
-
-            {["casual", "streetwear", "minimalist", "formal"].map((style) => (
-              <label key={style} style={{ marginRight: 16 }}>
-                <input type="checkbox" value={style} onChange={toggleStyle} />{" "}
-                {style}
-              </label>
-            ))}
+          <div style={{ marginTop: 24 }}>
+            <StyleQuiz onQuizComplete={handleQuizComplete} selectedTags={styles} />
           </div>
 
          <button
