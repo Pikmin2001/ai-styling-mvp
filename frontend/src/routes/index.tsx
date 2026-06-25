@@ -4,6 +4,12 @@ import { StyleQuiz } from "@/components/StyleQuiz"
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000"
 
+type QuizProfile = {
+  archetypes: string[]
+  style_tags: string[]
+  query_styles: string[]
+}
+
 export const Route = createFileRoute("/")({
   component: Home,
 })
@@ -14,12 +20,26 @@ function Home() {
   const [maxPrice, setMaxPrice] = useState("")
   const [shareUrl, setShareUrl] = useState("")
   const [styles, setStyles] = useState<string[]>([])
+  const [quizProfile, setQuizProfile] = useState<QuizProfile | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [swapping, setSwapping] = useState<string | null>(null)
 
-  function handleQuizComplete(result: any) {
+  function handleQuizComplete(result: QuizProfile) {
+    setQuizProfile(result)
     setStyles(result.style_tags || [])
+  }
+
+  function getOutfitExplanation() {
+    if (!outfit || !quizProfile) {
+      return "This outfit is generated from your selected style profile and budget preferences."
+    }
+
+    const primary = quizProfile.archetypes[0]
+    const secondary = quizProfile.archetypes[1]
+    const tags = quizProfile.style_tags.join(", ")
+
+    return `This outfit was selected to reflect your ${primary} profile${secondary ? ` with a secondary ${secondary} influence` : ""}, using ${tags}.`
   }
 
   async function generateOutfit() {
@@ -139,6 +159,21 @@ async function saveOutfit() {
             <StyleQuiz onQuizComplete={handleQuizComplete} selectedTags={styles} />
           </div>
 
+          {quizProfile && (
+            <div style={{ marginTop: 20, background: "#111827", padding: 20, borderRadius: 16, border: "1px solid #334155" }}>
+              <h3 style={{ marginTop: 0, marginBottom: 10 }}>Aesthetic Profile</h3>
+              <p style={{ margin: "8px 0" }}>
+                <strong>Primary archetype:</strong> {quizProfile.archetypes[0]}
+              </p>
+              <p style={{ margin: "8px 0" }}>
+                <strong>Secondary archetype:</strong> {quizProfile.archetypes[1] || quizProfile.archetypes[0]}
+              </p>
+              <p style={{ margin: "8px 0" }}>
+                <strong>Style tags:</strong> {quizProfile.style_tags.join(", ")}
+              </p>
+            </div>
+          )}
+
          <button
   type="button"
   onClick={generateOutfit}
@@ -183,6 +218,18 @@ async function saveOutfit() {
             }}
           >
             <h2>Your Outfit</h2>
+
+            <div
+              style={{
+                background: "#111827",
+                padding: 16,
+                borderRadius: 12,
+                marginBottom: 20,
+                color: "#e2e8f0",
+              }}
+            >
+              <p style={{ margin: 0, lineHeight: 1.7 }}>{getOutfitExplanation()}</p>
+            </div>
 
             <div
               style={{

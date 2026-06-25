@@ -43,12 +43,12 @@ QUIZ_QUESTIONS = [
     },
     {
         "id": "occasion",
-        "question": "What kind of event are you dressing for?",
+        "question": "What would you wear to your ideal day out?",
         "options": [
-            {"value": "business_casual", "label": "A smart day at the office"},
-            {"value": "athleisure", "label": "A relaxed weekend with polished sportwear"},
-            {"value": "dark_academia", "label": "A moody library or creative studio"},
-            {"value": "coastal", "label": "A warm seaside or resort day"},
+            {"value": "business_casual", "label": "A crisp shirt and chinos for a polished city stroll"},
+            {"value": "athleisure", "label": "A refined tracksuit and sneakers for effortless comfort"},
+            {"value": "dark_academia", "label": "A wool coat with layered knits for a cultured afternoon"},
+            {"value": "romantic_feminine", "label": "A flowy dress with soft textures for a dreamy cafe date"},
         ],
     },
     {
