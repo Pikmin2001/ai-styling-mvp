@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useState } from "react"
 import { StyleQuiz } from "@/components/StyleQuiz"
+import { OutfitSwipeDeck } from "@/components/OutfitSwipeDeck"
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000"
 
@@ -21,6 +22,8 @@ function Home() {
   const [shareUrl, setShareUrl] = useState("")
   const [styles, setStyles] = useState<string[]>([])
   const [quizProfile, setQuizProfile] = useState<QuizProfile | null>(null)
+  const [likedOutfits, setLikedOutfits] = useState<any[]>([])
+  const [selectedOutfit, setSelectedOutfit] = useState<any | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [swapping, setSwapping] = useState<string | null>(null)
@@ -43,26 +46,56 @@ function Home() {
   }
 
   async function generateOutfit() {
-  setLoading(true)
-  setError(null)
-  setShareUrl("")
-  try {
-    const params = new URLSearchParams()
-    if (gender) params.append("gender", gender)
-    if (maxPrice) params.append("max_price", maxPrice)
-    if (styles.length) params.append("styles", styles.join(","))
+    setLoading(true)
+    setError(null)
+    setShareUrl("")
+    try {
+      const params = new URLSearchParams()
+      if (gender) params.append("gender", gender)
+      if (maxPrice) params.append("max_price", maxPrice)
+      if (styles.length) params.append("styles", styles.join(","))
 
-    const res = await fetch(`${API_URL}/api/v1/outfits/generate?${params.toString()}`, {
-      method: "POST",
-    })
-    const data = await res.json()
-    setOutfit(data)
-  } catch (e) {
-    setError("Failed to generate outfit")
-  } finally {
-    setLoading(false)
+      const res = await fetch(`${API_URL}/api/v1/outfits/generate?${params.toString()}`, {
+        method: "POST",
+      })
+      const data = await res.json()
+      setOutfit(data)
+    } catch (e) {
+      setError("Failed to generate outfit")
+    } finally {
+      setLoading(false)
+    }
   }
-}
+
+  function onLikeOutfit() {
+    if (!outfit) return
+    setLikedOutfits((prev) => [...prev, { ...outfit, archetypes: quizProfile?.archetypes }])
+    setSelectedOutfit(outfit)
+
+    if (quizProfile) {
+      const nextStyleTags = [...new Set([...(quizProfile.style_tags || []), ...(outfit.styles || [])])]
+      setStyles(nextStyleTags)
+      setQuizProfile({ ...quizProfile, style_tags: nextStyleTags })
+    }
+
+    generateOutfit()
+  }
+
+  function onDislikeOutfit() {
+    if (!outfit) return
+    setOutfit(null)
+    generateOutfit()
+  }
+
+  function onChooseCurrentOutfit() {
+    if (!outfit) return
+    setSelectedOutfit(outfit)
+  }
+
+  function onSelectLikedOutfit(liked: any) {
+    setSelectedOutfit(liked)
+    setStyles(liked.styles || [])
+  }
 
 async function swapItem(itemType: string) {
   if (!outfit) return
@@ -192,6 +225,20 @@ async function saveOutfit() {
 >
   {loading ? "Generating..." : "Generate Outfit"}
 </button>
+
+          <div style={{ marginTop: 24 }}>
+            <OutfitSwipeDeck
+              outfit={outfit}
+              selectedOutfit={selectedOutfit}
+              likedOutfits={likedOutfits}
+              loading={loading}
+              onLike={onLikeOutfit}
+              onDislike={onDislikeOutfit}
+              onChooseCurrent={onChooseCurrentOutfit}
+              onSelectLiked={onSelectLikedOutfit}
+            />
+          </div>
+
 {error && (
   <p style={{ color: "#f87171", marginTop: 10 }}>
     {error}
