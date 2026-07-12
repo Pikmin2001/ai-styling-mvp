@@ -1,16 +1,96 @@
-def enrich_tags(item):
-    tags = set(getattr(item, "style_tags", []) or [])
+from __future__ import annotations
 
-    if item.category in ["hoodie", "sneakers", "shoes"]:
+import ast
+import base64
+from typing import Any
+
+try:
+    from openai import OpenAI
+except ImportError:  # pragma: no cover - optional dependency
+    OpenAI = None
+
+
+def _normalize_tag(tag: str) -> str:
+    return tag.strip().lower().replace(" ", "_")
+
+
+def enrich_tags(item: Any) -> list[str]:
+    tags = {_normalize_tag(tag) for tag in (getattr(item, "style_tags", []) or [])}
+
+    category = (getattr(item, "category", "") or "").lower()
+    color = (getattr(item, "color", "") or "").lower()
+    formality = (getattr(item, "formality", "") or "").lower()
+    name = (getattr(item, "name", "") or "").lower()
+
+    if category in {"hoodie", "sneaker", "sneakers", "shoe", "shoes", "jacket"}:
         tags.add("streetwear")
 
-    if item.color in ["black", "white", "gray", "navy", "khaki"]:
+    if category in {"skirt", "dress", "blouse", "shirt", "top", "button_down"}:
+        tags.add("smart_casual")
+
+    if color in {"black", "white", "gray", "navy", "khaki", "cream"}:
         tags.add("minimalist")
 
-    if item.formality in ["formal", "smart casual"]:
+    if formality in {"formal", "smart casual", "smart_casual"}:
         tags.add("formal")
 
-    if item.formality == "casual":
+    if formality in {"casual", "streetwear"}:
         tags.add("casual")
 
-    return list(tags)
+    if any(keyword in name for keyword in ["oversized", "relaxed", "loose", "cropped"]):
+        tags.add("relaxed")
+
+    if any(keyword in name for keyword in ["slim", "tailored", "straight", "structured"]):
+        tags.add("structured")
+
+    if any(keyword in name for keyword in ["denim", "jeans", "cargo", "chinos"]):
+        tags.add("denim")
+
+    return sorted(tags)
+
+
+def suggest_tags_from_image(image_bytes: bytes | None = None, *, prompt: str | None = None) -> list[str]:
+    """Best-effort image tagging using OpenAI vision when credentials are available.
+
+    Falls back to an empty list when no image is supplied or the SDK is unavailable.
+    """
+    if image_bytes is None:
+        return []
+
+    if OpenAI is None:
+        return []
+
+    try:
+        client = OpenAI()
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=[
+                {
+                    "role": "system",
+                    "content": "You are a fashion tagging assistant. Return a compact JSON array of style tags for the clothing in the image.",
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": prompt or "Describe the clothing style, formality, and color palette in a compact list of tags.",
+                        },
+                        {
+                            "type": "input_image",
+                            "image_url": f"data:image/jpeg;base64,{base64.b64encode(image_bytes).decode('ascii')}",
+                        },
+                    ],
+                },
+            ],
+        )
+        content = response.output_text or ""
+        if content.startswith("["):
+            parsed = ast.literal_eval(content)
+            if isinstance(parsed, list):
+                return [_normalize_tag(str(tag)) for tag in parsed]
+    except Exception:
+        return []
+
+    return []
+
