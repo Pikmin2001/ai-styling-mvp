@@ -313,17 +313,31 @@ async function saveOutfit() {
 
 
 
-<img
-  src={item.image_url || "https://via.placeholder.com/300x200?text=No+Image"}
-  alt={item.name}
+<div
   style={{
     width: "100%",
     height: 150,
-    objectFit: "cover",
     borderRadius: 8,
+    overflow: "hidden",
+    background: "#111827",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 10,
+    padding: 8,
   }}
-/>
+>
+  <img
+    src={item.image_url || "https://via.placeholder.com/300x200?text=No+Image"}
+    alt={item.name}
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+      objectPosition: "center",
+    }}
+  />
+</div>
 
 <p style={{ fontSize: 18, fontWeight: "bold" }}>{item.name}</p>
                   <p>${item.price}</p>

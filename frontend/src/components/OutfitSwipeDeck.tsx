@@ -79,11 +79,32 @@ export function OutfitSwipeDeck({
         </div>
 
         <div style={{ display: "grid", gap: 14 }}>
-          <img
-            src={outfit.top?.image_url || "https://via.placeholder.com/640x420?text=No+Image"}
-            alt={outfit.top?.name || "Outfit preview"}
-            style={{ width: "100%", height: 300, objectFit: "cover", borderRadius: 20 }}
-          />
+          <div
+            style={{
+              width: "100%",
+              height: 320,
+              borderRadius: 20,
+              overflow: "hidden",
+              background: "linear-gradient(135deg, #334155 0%, #0f172a 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 12,
+            }}
+          >
+            <img
+              src={outfit.top?.image_url || "https://via.placeholder.com/640x420?text=No+Image"}
+              alt={outfit.top?.name || "Outfit preview"}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                objectPosition: "center",
+                borderRadius: 16,
+                background: "#fff",
+              }}
+            />
+          </div>
 
           <div style={{ display: "grid", gap: 10 }}>
             <div>
@@ -139,11 +160,23 @@ export function OutfitSwipeDeck({
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14 }}>
             {likedOutfits.map((liked) => (
               <div key={liked.total_price + liked.top?.id} style={{ background: "#111827", borderRadius: 16, padding: 14 }}>
-                <div style={{ height: 100, marginBottom: 10, overflow: "hidden", borderRadius: 12 }}>
+                <div
+                  style={{
+                    height: 120,
+                    marginBottom: 10,
+                    overflow: "hidden",
+                    borderRadius: 12,
+                    background: "#1f2937",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 8,
+                  }}
+                >
                   <img
                     src={liked.top?.image_url || "https://via.placeholder.com/300x200?text=No+Image"}
                     alt={liked.top?.name}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }}
                   />
                 </div>
                 <p style={{ margin: 0, fontSize: 13 }}>{liked.archetypes?.join(" / ") ?? "Liked outfit"}</p>

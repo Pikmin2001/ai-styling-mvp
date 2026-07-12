@@ -1,6 +1,7 @@
 from app.models import ClothItem
+from app.data.kaggle_inventory import load_kaggle_items
 
-fake_items = [
+starter_items = [
     ClothItem(
         id=1,
         name="Black_Oversized_Tee",
@@ -182,3 +183,6 @@ fake_items = [
         image_url="/images/White_Leather_Sneakers.jpg",
     ),
 ]
+
+kaggle_items = load_kaggle_items(limit=40, copy_images=True)
+fake_items = starter_items + kaggle_items
