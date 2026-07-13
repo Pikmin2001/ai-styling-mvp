@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import ast
 import base64
-from typing import Any
+from typing import Any, cast
 
 try:
     from openai import OpenAI
@@ -49,12 +49,45 @@ def enrich_tags(item: Any) -> list[str]:
     return sorted(tags)
 
 
+def _extract_response_text(response: Any) -> str:
+    if response is None:
+        return ""
+
+    output_text = getattr(response, "output_text", None)
+    if isinstance(output_text, str) and output_text.strip():
+        return output_text
+
+    output = getattr(response, "output", None)
+    if isinstance(output, list):
+        pieces: list[str] = []
+        for item in output:
+            if isinstance(item, dict):
+                content = item.get("content")
+                if isinstance(content, list):
+                    for entry in content:
+                        if isinstance(entry, dict):
+                            text = entry.get("text")
+                            if isinstance(text, str) and text.strip():
+                                pieces.append(text)
+                elif isinstance(content, str) and content.strip():
+                    pieces.append(content)
+            elif hasattr(item, "text"):
+                text = getattr(item, "text")
+                if isinstance(text, str) and text.strip():
+                    pieces.append(text)
+
+        if pieces:
+            return "\n".join(pieces)
+
+    return ""
+
+
 def suggest_tags_from_image(image_bytes: bytes | None = None, *, prompt: str | None = None) -> list[str]:
     """Best-effort image tagging using OpenAI vision when credentials are available.
 
     Falls back to an empty list when no image is supplied or the SDK is unavailable.
     """
-    if image_bytes is None:
+    if not image_bytes:
         return []
 
     if OpenAI is None:
@@ -64,27 +97,30 @@ def suggest_tags_from_image(image_bytes: bytes | None = None, *, prompt: str | N
         client = OpenAI()
         response = client.responses.create(
             model="gpt-4.1-mini",
-            input=[
-                {
-                    "role": "system",
-                    "content": "You are a fashion tagging assistant. Return a compact JSON array of style tags for the clothing in the image.",
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "input_text",
-                            "text": prompt or "Describe the clothing style, formality, and color palette in a compact list of tags.",
-                        },
-                        {
-                            "type": "input_image",
-                            "image_url": f"data:image/jpeg;base64,{base64.b64encode(image_bytes).decode('ascii')}",
-                        },
-                    ],
-                },
-            ],
+            input=cast(
+                Any,
+                [
+                    {
+                        "role": "system",
+                        "content": "You are a fashion tagging assistant. Return a compact JSON array of style tags for the clothing in the image.",
+                    },
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "input_text",
+                                "text": prompt or "Describe the clothing style, formality, and color palette in a compact list of tags.",
+                            },
+                            {
+                                "type": "input_image",
+                                "image_url": f"data:image/jpeg;base64,{base64.b64encode(image_bytes).decode('ascii')}",
+                            },
+                        ],
+                    },
+                ],
+            ),
         )
-        content = response.output_text or ""
+        content = _extract_response_text(response).strip()
         if content.startswith("["):
             parsed = ast.literal_eval(content)
             if isinstance(parsed, list):

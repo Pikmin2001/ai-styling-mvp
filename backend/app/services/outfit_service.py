@@ -41,10 +41,11 @@ def diversity_penalty(item):
     return -1 if item.id in recent_ids else 0
 
 def generate_outfit(items, gender=None, max_price=None, styles=None):
+    normalized_gender = (gender or "").strip().lower()
     filtered = [
         i for i in items
         if i.in_stock
-        and (gender is None or i.gender == gender)
+        and (not normalized_gender or i.gender == normalized_gender or i.gender == "unisex")
         and (max_price is None or i.price <= max_price)
     ]
 
@@ -59,8 +60,7 @@ def generate_outfit(items, gender=None, max_price=None, styles=None):
         return None
 
     candidates = []
-
-    for _ in range(10):
+    for _ in range(20):
         t = random.choice(tops)
         b = random.choice(bottoms)
         s = random.choice(shoes)

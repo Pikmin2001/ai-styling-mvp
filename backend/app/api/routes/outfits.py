@@ -4,6 +4,19 @@ from app.services.outfit_service import generate_outfit
 from app.data.fake_inventory import fake_items
 from uuid import uuid4
 
+
+def _inventory_summary() -> list[dict]:
+    return [
+        {
+            "id": item.id,
+            "name": item.name,
+            "category": item.category,
+            "gender": item.gender,
+            "image_url": item.image_url,
+        }
+        for item in fake_items
+    ]
+
 router = APIRouter(prefix="/outfits", tags=["outfits"])
 saved_outfits = {}
 
@@ -103,6 +116,11 @@ def save_outfit(current_outfit: dict):
         "share_url": f"/outfits/{outfit_id}",
         "outfit": current_outfit
     }
+
+
+@router.get("/inventory")
+def inventory() -> dict:
+    return {"items": _inventory_summary()}
 
 
 @router.get("/{outfit_id}")

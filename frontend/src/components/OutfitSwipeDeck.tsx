@@ -82,28 +82,46 @@ export function OutfitSwipeDeck({
           <div
             style={{
               width: "100%",
-              height: 320,
+              minHeight: 320,
               borderRadius: 20,
               overflow: "hidden",
               background: "linear-gradient(135deg, #334155 0%, #0f172a 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               padding: 12,
             }}
           >
-            <img
-              src={outfit.top?.image_url || "https://via.placeholder.com/640x420?text=No+Image"}
-              alt={outfit.top?.name || "Outfit preview"}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                objectPosition: "center",
-                borderRadius: 16,
-                background: "#fff",
-              }}
-            />
+            <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
+              {[{ label: "Top", item: outfit.top }, { label: "Bottom", item: outfit.bottom }, { label: "Shoes", item: outfit.shoes }].map(({ label, item }) => (
+                <div key={label} style={{ display: "grid", gap: 8 }}>
+                  <div
+                    style={{
+                      height: 180,
+                      borderRadius: 16,
+                      overflow: "hidden",
+                      background: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 8,
+                    }}
+                  >
+                    <img
+                      src={item?.image_url || "https://via.placeholder.com/320x220?text=No+Image"}
+                      alt={item?.name || `${label} preview`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        objectPosition: "center",
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: 14 }}>{item?.name || `${label} placeholder`}</h4>
+                    <p style={{ margin: "4px 0 0", color: "#94a3b8", fontSize: 12 }}>{label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div style={{ display: "grid", gap: 10 }}>
